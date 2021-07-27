@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/ash3798/url-shortner/config"
+	"github.com/ash3798/url-shortner/server"
 )
 
 func main() {
@@ -12,4 +13,6 @@ func main() {
 	if !config.InitEnv() {
 		return
 	}
+
+	server.Start()
 }

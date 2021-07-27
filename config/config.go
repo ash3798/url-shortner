@@ -7,7 +7,7 @@ import (
 )
 
 type config struct {
-	ApplicationPort int `split_words:"true", default:"9999"`
+	ApplicationPort int `split_words:"true" default:"9999"`
 }
 
 var (
