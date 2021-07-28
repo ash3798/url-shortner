@@ -10,8 +10,8 @@ import (
 )
 
 type TASK interface {
-	GetShortURL(shortURL string) (string, error)
-	CreateShortURL(data []byte) (string, error)
+	GetShortURL(shortURL []byte) ([]byte, error)
+	CreateShortURL(data []byte) ([]byte, error)
 }
 
 type task struct{}
@@ -24,33 +24,50 @@ func init() {
 	Action = task{}
 }
 
+type URLDetails struct {
+	Url      string `json:"url"`
+	ShortURL string `json:"short_url"`
+}
+
 //GetShortURL processes the get request for short URL for given long URL
-func (t task) GetShortURL(longURL string) (string, error) {
+func (t task) GetShortURL(urlData []byte) ([]byte, error) {
 	log.Println("get the short URL for given URL")
-	protocol, urlWithoutProtocol := seperateURLComponents(longURL)
+
+	var urlInfo URLDetails
+	err := json.Unmarshal(urlData, &urlInfo)
+	if err != nil {
+		log.Println("Error while unmarshelling the request payload. Error : ", err.Error())
+		return []byte(""), errors.New("unmarshal error in the given URL")
+	}
+
+	protocol, urlWithoutProtocol := seperateURLComponents(urlInfo.Url)
 
 	entry := Cache.get(urlWithoutProtocol)
 	if entry == "" {
-		return "", errors.New("short URL for entered URL is not present. You can create it using create api")
+		return []byte(""), errors.New("short URL for entered URL is not present. You can create it using create api")
 	}
 
-	shortURL := fmt.Sprintf("%s://%s", protocol, entry)
+	urlInfo.ShortURL = fmt.Sprintf("%s://%s", protocol, entry)
 
-	return shortURL, nil
+	result, err := json.Marshal(urlInfo)
+	if err != nil {
+		return []byte(""), errors.New("error while marshelling the result")
+	}
+	return result, nil
 }
 
 //CreateShortURL processes the request to create short URL from long URL
-func (t task) CreateShortURL(data []byte) (string, error) {
+func (t task) CreateShortURL(data []byte) ([]byte, error) {
 	log.Println("create the short URL for the given URL")
 
-	var longURL string
-	err := json.Unmarshal(data, &longURL)
+	var urlInfo URLDetails
+	err := json.Unmarshal(data, &urlInfo)
 	if err != nil {
 		log.Println("Error while unmarshelling the request payload. Error : ", err.Error())
-		return "", errors.New("unmarshal error in the given URL")
+		return []byte(""), errors.New("unmarshal error in the given URL")
 	}
 
-	protocol, urlWithoutProtocol := seperateURLComponents(longURL)
+	protocol, urlWithoutProtocol := seperateURLComponents(urlInfo.Url)
 
 	//check if the URL is already present or not
 	var hash string
@@ -61,13 +78,17 @@ func (t task) CreateShortURL(data []byte) (string, error) {
 		Cache.insert(urlWithoutProtocol, hash)
 	}
 
-	shortURL := fmt.Sprintf("%s://%s", protocol, hash)
+	urlInfo.ShortURL = fmt.Sprintf("%s://%s", protocol, hash)
 
-	log.Println(longURL)
+	log.Println(urlInfo)
 
-	log.Printf("%s", shortURL)
+	log.Printf("%s", urlInfo.ShortURL)
 
-	return shortURL, nil
+	result, err := json.Marshal(urlInfo)
+	if err != nil {
+		return []byte(""), errors.New("error while marshelling the result")
+	}
+	return result, nil
 }
 
 func createHash(longURL string) []byte {
