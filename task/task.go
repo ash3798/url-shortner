@@ -10,7 +10,7 @@ import (
 )
 
 type TASK interface {
-	GetShortURL(shortURL []byte) ([]byte, error)
+	GetShortURL(urlData []byte) ([]byte, error)
 	CreateShortURL(data []byte) ([]byte, error)
 }
 
@@ -31,7 +31,6 @@ type URLDetails struct {
 
 //GetShortURL processes the get request for short URL for given long URL
 func (t task) GetShortURL(urlData []byte) ([]byte, error) {
-	log.Println("get the short URL for given URL")
 
 	var urlInfo URLDetails
 	err := json.Unmarshal(urlData, &urlInfo)

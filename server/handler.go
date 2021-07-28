@@ -18,29 +18,31 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 	//Get request for the URL
 	if r.Method == "GET" {
 		result, err := task.Action.GetShortURL(data)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
+		if !isError(w, err) {
+			w.WriteHeader(http.StatusOK)
+			w.Write(result)
 		}
-
-		w.WriteHeader(http.StatusOK)
-		w.Write(result)
 		return
 	}
 
 	//create URL Request
 	if r.Method == "POST" {
 		result, err := task.Action.CreateShortURL(data)
-		if err != nil {
-			http.Error(w, "Error while processing the request."+err.Error(), http.StatusBadRequest)
-			return
+		if !isError(w, err) {
+			w.WriteHeader(http.StatusOK)
+			w.Write(result)
 		}
-
-		w.WriteHeader(http.StatusOK)
-		w.Write(result)
 		return
 	}
 
 	//invalid method
 	http.Error(w, "Wrong http method used. Please use GET for existing URL and POST for creating new URL", http.StatusMethodNotAllowed)
+}
+
+func isError(w http.ResponseWriter, err error) bool {
+	if err != nil {
+		http.Error(w, "Error while processing the request."+err.Error(), http.StatusBadRequest)
+		return true
+	}
+	return false
 }
