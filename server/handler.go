@@ -17,16 +17,28 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 
 	//Get request for the URL
 	if r.Method == "GET" {
-		task.GetShortURL("testURL")
+		shortURL, err := task.Action.GetShortURL(string(data))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(shortURL))
+		return
 	}
 
 	//create URL Request
 	if r.Method == "POST" {
-		err = task.CreateShortURL(data)
+		shortURL, err := task.Action.CreateShortURL(data)
 		if err != nil {
 			http.Error(w, "Error while processing the request."+err.Error(), http.StatusBadRequest)
 			return
 		}
+
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(shortURL))
+		return
 	}
 
 	//invalid method
