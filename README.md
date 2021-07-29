@@ -33,3 +33,39 @@ go build
 
 ## USAGE GUIDE
 
+**Note : Server is HTTP. So your requests should use http protocol.**
+```shell
+http:://<hostname>:<port>/<path>
+```
+### API available
+1. **Generate Short URL** : User can use this API to generate the short-URL for given long-URL
+```json
+POST  /url
+
+Body :   {
+           "url" : "https://www.testurl.com"
+         }
+         
+Response : {
+             "url": "https://www.testurl.com",
+             "short_url": "https://8da3432a12b13e"
+           }
+```
+> * Response consists of the original-URL as well as the generated short-URL for it.
+> * If same URL is passed again and again, the URL that was generated first time will be returned for all these requests.
+
+2. **Get Short URL** : User can use this api to view the short URL created previously for the long URL
+```json
+GET  /url
+
+Body :   {
+           "url" : "https://www.testurl.com"
+         }
+         
+Response : {
+             "url": "https://www.testurl.com",
+             "short_url": "https://8da3432a12b13e"
+           }
+```
+> * Response consists of the original-URL as well as the generated short-URL for it.
+> * If user passes the URL for whom the shortURL has not been generated previously, error will be returned.
