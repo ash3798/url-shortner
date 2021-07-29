@@ -32,7 +32,7 @@ go build
 * Once created, you can run the executable to start using your application. 
 
 ## USAGE GUIDE
-
+> Application runs by default on the port number : 9999
 **Note : Server is HTTP. So your requests should use http protocol.**
 ```shell
 http:://<hostname>:<port>/<path>
