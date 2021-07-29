@@ -21,7 +21,7 @@ docker pull itsmeashish/url-shortner:latest
 
 ### 2. Build executable from source code
 
-* Clone the repository in your GOPATH
+* Clone the repository in your GOPATH or use go get command 
 ```shell
 go get -u github.com/ash3798/url-shortner
 ```
