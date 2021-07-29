@@ -50,6 +50,7 @@ func (t task) GetShortURL(urlData []byte) ([]byte, error) {
 
 	result, err := json.Marshal(urlInfo)
 	if err != nil {
+		log.Println("Error while marshelling the request response. Error : ", err.Error())
 		return []byte(""), errors.New("error while marshelling the result")
 	}
 	return result, nil
@@ -80,6 +81,7 @@ func (t task) CreateShortURL(data []byte) ([]byte, error) {
 
 	result, err := json.Marshal(urlInfo)
 	if err != nil {
+		log.Println("Error while marshelling the request response. Error : ", err.Error())
 		return []byte(""), errors.New("error while marshelling the result")
 	}
 	return result, nil

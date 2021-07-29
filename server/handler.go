@@ -2,6 +2,7 @@ package server
 
 import (
 	"io/ioutil"
+	"log"
 	"net/http"
 
 	"github.com/ash3798/url-shortner/task"
@@ -21,6 +22,7 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 		if !isError(w, err) {
 			w.WriteHeader(http.StatusOK)
 			w.Write(result)
+			log.Println("Successfully served the get url request")
 		}
 		return
 	}
@@ -31,6 +33,7 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
 		if !isError(w, err) {
 			w.WriteHeader(http.StatusOK)
 			w.Write(result)
+			log.Println("Successfully served the url generation request")
 		}
 		return
 	}
