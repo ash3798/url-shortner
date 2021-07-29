@@ -57,7 +57,6 @@ func (t task) GetShortURL(urlData []byte) ([]byte, error) {
 
 //CreateShortURL processes the request to create short URL from long URL
 func (t task) CreateShortURL(data []byte) ([]byte, error) {
-	log.Println("create the short URL for the given URL")
 
 	var urlInfo URLDetails
 	err := json.Unmarshal(data, &urlInfo)
@@ -78,10 +77,6 @@ func (t task) CreateShortURL(data []byte) ([]byte, error) {
 	}
 
 	urlInfo.ShortURL = fmt.Sprintf("%s://%s", protocol, hash)
-
-	log.Println(urlInfo)
-
-	log.Printf("%s", urlInfo.ShortURL)
 
 	result, err := json.Marshal(urlInfo)
 	if err != nil {
