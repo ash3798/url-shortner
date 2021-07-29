@@ -23,7 +23,7 @@ docker pull itsmeashish/url-shortner:latest
 
 * Clone the repository in your GOPATH or use go get command 
 ```shell
-go get -u github.com/ash3798/url-shortner
+git clone https://github.com/ash3798/url-shortner.git
 ```
 * Run the build command at root of the project to create the executable of the application
 ```
